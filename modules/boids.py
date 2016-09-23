@@ -52,6 +52,9 @@ class B(object):
     dx = dx/norm(dx)
     self.dx[i, :] += dx*s
 
+  def get_nearby(self):
+    return self.tree.query_ball_point(self.xy, self.rad)
+
   def step(
       self,
       separation,
@@ -59,9 +62,8 @@ class B(object):
       alignment
       ):
     self.xy += self.v
-    self.tree = kdtree(self.xy)
 
-    nearby = self.tree.query_ball_point(self.xy, self.rad)
+    nearby = self.get_nearby()
 
     separation = self.stp*separation
     alignment = self.stp*alignment
@@ -80,5 +82,7 @@ class B(object):
 
     self.v += self.dx/3.0
     self.v *= self.slowdown
+
+    self.tree = kdtree(self.xy)
 
 
